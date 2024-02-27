@@ -5,6 +5,7 @@ import Reg from './register';
 import Login from './login';
 import Userhome from './userhome';
 import Learn from './learn';
+import Codetails from './codet';
 function App() {
   return (
     <div className="App">
@@ -15,6 +16,7 @@ function App() {
     <Route path='/register' element={<Reg/>} ></Route>
     <Route path='/home' element={<Userhome/>} ></Route>
     <Route path='/home/learn' element={<Learn/>}></Route>
+    <Route path='/home/learn/cd/:cid' element={<Codetails />}></Route>
    </Routes>
    </BrowserRouter>
     </div>
