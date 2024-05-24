@@ -1,7 +1,7 @@
 import  { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { useNavigate } from 'react-router-dom'
-
+import Swal from 'sweetalert2'
 import axios from 'axios'
 
 function Reg() {
@@ -15,22 +15,49 @@ function Reg() {
   function handlesum(e){
    e.preventDefault()
    if(email==="" || password==="" || username===""){
-   alert("Enter all the fields")
+    Swal.fire({
+      icon: "error",
+      title: "Invalid Credentials",
+      text: "Enter all fields",
+   
+    });
    }
    else if(password!=cpass){
-    alert("Password are not equal")
+    Swal.fire({
+      icon: "error",
+      title: "Invalid Credentials",
+      text: "Both passwords are not Equal",
+   
+    });
    }
    else if(password.length<8){
-    alert("Password must be minimun 8 letters")
+    Swal.fire({
+      icon: "error",
+      title: "Invalid Registration",
+      text: "Password must atleast 8 characters",
+   
+    });
    }
    else{
-    axios.post('http://127.0.0.1:8000/',{username,email,password})
+    axios.post('https://cybertrainer-latest-1.onrender.com',{username,email,password})
     .then((res)=>{
+      Swal.fire({
+        icon: "success",
+        title: "Registered Sucessfully",
+        showConfirmButton: false,
+        timer: 1500
+      });
       history('/login')
       console.log(res.data)
       
     })
     .catch((err)=>{
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Credentials",
+        text: "Check you username and password",
+     
+      });
       console.log(err)
     })
    }

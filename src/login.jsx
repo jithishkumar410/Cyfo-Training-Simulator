@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import axios from 'axios';
-
+import Swal from 'sweetalert2'
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,21 +11,40 @@ function Login() {
   function handleLogin(e) {
     e.preventDefault();
     if (email === "" || password === "") {
-      alert("Enter all the fields");
+      
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Feilds",
+        text: "Enter Details in all Fields",
+     
+      });
+
     } else {
       const loginData = {
         username: email,
         password: password
       };
 
-      axios.post('http://localhost:8000/login/', loginData)
+      axios.post('https://cybertrainer-latest-1.onrender.com/login/', loginData)
         .then(response => {
+          Swal.fire({
+            icon: "success",
+            title: "Login Sucessfully",
+            showConfirmButton: false,
+            timer: 1500
+          });
           const token = response.data.access; 
           localStorage.setItem('token', token); 
           history('/home');
           console.log(response.data);
         })
         .catch(error => {
+          Swal.fire({
+            icon: "error",
+            title: "Invalid Credentials",
+            text: "Check you username and password",
+         
+          });
           console.error('Login failed:', error);
         });
     }

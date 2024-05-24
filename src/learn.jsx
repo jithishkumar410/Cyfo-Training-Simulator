@@ -10,33 +10,36 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
-  } from "@/components/ui/hover-card"
+  import { ScrollArea} from "@/components/ui/scroll-area"
+  import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
 
+import Tb from "./tb";
 function Learn() {
     const history = useNavigate();
-    const [uname, setname] = useState('');
-    const [ui, setid] = useState();
     const [data, setdata] = useState([]);
     const [cat, setcat] = useState([]);
+    const [ui,setui]=useState()
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
             history('/');
         } else {
-            axios.get('http://127.0.0.1:8000/home/', {
+            axios.get('https://cybertrainer-latest-1.onrender.com/home/', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             })
             .then(response => {
-                setname(response.data.username);
-                setid(response.data.userid);
+                setui(response.data.userid)
             })
             .catch(error => {
                 console.error('Home:', error);
@@ -47,7 +50,7 @@ function Learn() {
         }
     }, []); 
     const f =()=>{
-        axios.get('http://127.0.0.1:8000/co/')
+        axios.get('https://cybertrainer-latest-1.onrender.com/co/')
             .then((res)=>{
                 console.log(res.data)
                 setdata(res.data)
@@ -57,7 +60,7 @@ function Learn() {
             })
         }
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/cat/')
+        axios.get('https://cybertrainer-latest-1.onrender.com/cat/')
     
         .then((res) => {
             
@@ -68,28 +71,20 @@ function Learn() {
             console.log('cat:', err);
         });
     }, []); 
-    function logout() {
-        const token = localStorage.getItem('token');
-        if (token) {
-            axios.get('http://127.0.0.1:8000/logout/', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            .then((response) => {
-                localStorage.removeItem('token');
-                history('/');
-            })
-            .catch(error => {
-                console.error('Logout:', error);
-            });
-        } else {
-            console.error('Token not available');
-        }
-    }
+
+    
+  function add(c){
+      axios.post('https://cybertrainer-latest-1.onrender.com/add/',{ui,'ci':c})
+      .then((res)=>{
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log('cat:', err);
+    });
+  }
      
     function getcat(c) {
-        axios.post('http://127.0.0.1:8000/co/', { 'cn': c })
+        axios.post('https://cybertrainer-latest-1.onrender.com/co/', { 'cn': c })
         .then((res) => {
             setdata(res.data);
         })
@@ -99,44 +94,71 @@ function Learn() {
     }
 
     return (
-        <div className="bg-black">
-            <div className="flex absolute top-4 right-6 gap-6">
-                <Button onClick={logout} className='bg-lime-500 py-3 px-4 text-xl rounded border border-lime-500 hover:text-lime-500 hover:bg-slate-950'>Logout</Button>
-                <a href='/profile' className='bg-lime-500 py-1 px-4 text-xl border border-lime-500 hover:text-lime-500 hover:bg-slate-950 rounded'>Hi.. {uname}!</a>
-            </div>
-
+        <div className="">
+            
+            
+<div className="absolute right-6 top-5 flex gap-4 z-10 ">
+<a href="\home" className='bg-lime-500 py-1 px-4 text-xl border border-lime-500 hover:text-lime-500 hover:bg-slate-950 rounded'>Back</a>
+      <Tb/>
+    </div>
+     
             <div className="flex gap-10 ">
+           
                 <div>
-                    <Card className="w-[18rem] h-[700px] border border-black flex flex-col items-center gap-6 bg-slate-950 text-lime-500">
-                        <CardTitle className="mt-7 w-[90%] ease-in-out hover:text-center  hover:border-lime-500 hover:text-lime-500 hover:border-2 p-2 rounded" onClick={() => getcat('all')}>All</CardTitle>
+
+                    <Card className="w-[18rem] h-screen flex flex-col items-center gap-6 bg-black text-lime-500 ">
+                        <a className="mt-7 w-[100%] text-xl ease-in-out  hover:border-lime-500 hover:text-lime-500 hover:border-2 p-2 rounded" onClick={() => getcat('all')}>All</a>
                         {cat.map((v, i) => (
-                            <a href="#" className="w-[100%] ease-in  hover:text-center hover:border-lime-500 hover:text-lime-500 hover:border-2 p-2 rounded"><CardTitle  onClick={() => getcat(v.catname)} key={i}>{v.catname}</CardTitle></a>
+                            <a href="#" className="w-[100%] text-xl duration-0 hover:border-lime-500 hover:text-lime-500 hover:border-2 p-2 rounded" onClick={() => getcat(v.catname)} key={i}>{v.catname}</a>
                         ))}
                     </Card>
                 </div>
+   
 
-                <ScrollArea className="h-screen">
-                    <div className="flex gap-4 flex-wrap mt-16">
+                <ScrollArea className="h-screen" orientation="horizontal">
+                    <div className="flex gap-4 flex-wrap mt-32 mb-10">
                         {data.map((v, i) => (
-                            <Card key={i} className="w-[20rem] bg-slate-950 text-lime-500 border-2 border-lime-500">
+                            <Card key={i} className="w-[23rem] border-2 border-lime-500 bg-white">
                                 <CardHeader className="flex items-center flex-col bottom-2">
-                                    <img className="w-[10rem] h-[9rem]" src={`http://127.0.0.1:8000${v.cimg}`} />
+                                    <img className="w-[100%] h-[12rem]" src={`https://cybertrainer-latest-1.onrender.com${v.cimg}`} />
                                     <CardTitle>{v.corname}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <CardDescription>{v.cdes1}</CardDescription>
                                 </CardContent>
                                 <CardFooter className="flex flex-wrap justify-evenly ">
-                                    <CardDescription className="bg-lime-200 p-1 px-6 rounded text-black"> {v.dur}</CardDescription>
-                                    <CardDescription className="bg-lime-200 p-1 px-4 rounded text-black"> {v.author}</CardDescription>
+                                    <CardDescription className="bg-lime-500 p-1 px-6 rounded text-black"> {v.dur}</CardDescription>
+                                    <CardDescription className="bg-lime-500 p-1 px-4 rounded text-black"> {v.author}</CardDescription>
                                 </CardFooter>
                                 <div className="flex justify-center pb-4">
-                                <a href={`/home/learn/cd/${v.courseid}`}><Button className="bg-lime-500 text-black border-lime-500 border hover:text-lime-500 hover:bg-slate-950 rounded">Learn</Button></a>
+                                {v.enc?<a href={`/home/learn/cd/${v.courseid}`}><Button className="bg-lime-500 text-black border-lime-500 border hover:text-lime-500 hover:bg-slate-950 rounded">Enrolled</Button></a>:
+                                
+                                <Dialog>
+                                <DialogTrigger asChild>
+                                <Button className="bg-lime-500 text-black border-lime-500 border hover:text-lime-500 hover:bg-slate-950 rounded">Learn</Button>
+                                </DialogTrigger>
+
+                                <DialogContent className="sm:max-w-[425px] bg-white">
+                               <DialogHeader>
+                                 <DialogTitle>Confirmations</DialogTitle>
+                                 <DialogDescription>
+                                  Are you to enroll to this course
+                                 </DialogDescription>
+                               </DialogHeader>
+                               <DialogFooter className="flex gap-4">
+                               <a href={`/home/learn/cd/${v.courseid}`}><Button onClick={()=>{add(v.courseid)}} className="bg-lime-500 text-black border-lime-500 border hover:text-lime-500 hover:bg-slate-950 rounded">Confirm</Button></a>
+                               <Button className="bg-lime-500 text-black border-lime-500 border hover:text-lime-500 hover:bg-slate-950 rounded">Cancel</Button>
+                               </DialogFooter>
+                               </DialogContent>
+                                </Dialog>
+                                }
                                 </div>
                             </Card>
+                            
                         ))}
                     </div>
-                </ScrollArea>
+                </ScrollArea  >
+
             </div>
         </div>
     );
